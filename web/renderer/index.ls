@@ -15,18 +15,15 @@ shader = do
   """
   fragmentShader: glslify('''
   precision highp float;
-  #pragma glslify: fbm = require('../shaderlib/src/fbm.shader')
+  #pragma glslify: cloud = require('../../src/raster/cloud.shader')
   uniform float uTime;
   uniform vec3 color;
   uniform vec2 uResolution;
   void main() {
     float t = uTime;
     vec2 uv = vec2(gl_FragCoord.x / uResolution.x, gl_FragCoord.y / uResolution.y);
-    vec3 c = vec3(0,0,0);
-    for(float i=1.;i<5.;i++) {
-      c += color * fbm(vec2(uv.x * i + t * pow(3.,i) * 0.001, uv.y * i));
-    }
-    gl_FragColor = vec4(c * 0.3, 1.);
+    float c = cloud(uv, t, vec2(1.0, 0.1), 4.);
+    gl_FragColor = vec4(c * color, 1.);
   }
   ''')
 
