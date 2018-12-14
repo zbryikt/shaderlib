@@ -13,3 +13,4 @@ vec3 sobel(sampler2D txt, vec2 res, vec2 uv) {
   v += texture2D(txt, vec2(uv.x - x, uv.y + y));
   return vec3(1. - sqrt(h * h + v * v));
 }
+#pragma glslify: export(sobel)

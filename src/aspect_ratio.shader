@@ -1,4 +1,4 @@
-vec2 aspectRatio(vec2 input, vec2 res, int iscover) {
+vec2 aspect_ratio(vec2 input, vec2 res, int iscover) {
   // iscover: 0 = contains, 1 = cover
   if(iscover == 0 ^^ resolution.x > resolution.y) {
     r = resolution.y / resolution.x;
@@ -8,3 +8,5 @@ vec2 aspectRatio(vec2 input, vec2 res, int iscover) {
     vUv.x = (vUv.x * r) - (r - 1.) * 0.5;
   }
 }
+
+#pragma glslify: export(aspect_ratio)
