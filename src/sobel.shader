@@ -1,4 +1,4 @@
-vec3 sobel(sampler2D txt, vec2 res, vec2 uv) {
+vec3 sobel(sampler2D txt, vec2 uv, vec2 res) {
   float x = 1.0 / res.x;
   float y = 1.0 / res.y;
   vec4 h = vec4(.0), v = vec4(.0);
