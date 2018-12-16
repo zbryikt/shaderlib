@@ -2,6 +2,31 @@ require! <[glslify]>
 
 <- window.addEventListener \load, _
 
+shader3 = do
+  uniforms: {}
+  vertexShader: """
+  precision highp float;
+  attribute vec3 position;
+  void main() {
+    gl_Position = vec4(position, 1.);
+  }
+  """
+  fragmentShader: glslify '''
+  precision highp float;
+  #pragma glslify: high_pass = require('../../src/high_pass.shader')
+  #pragma glslify: fxaa = require('../../src/fxaa.shader')
+  #pragma glslify: grayscale = require('../../src/grayscale.shader')
+  #pragma glslify: blur = require('../../src/blur/13.shader')
+  #pragma glslify: sobel = require('../../src/sobel.shader')
+  uniform sampler2D uIn1;
+  uniform vec2 uResolution;
+  void main() {
+    vec2 uv = vec2(gl_FragCoord.x / uResolution.x, 1. - gl_FragCoord.y / uResolution.y);
+    vec4 c  = vec4(sobel(uIn1, uv, uResolution), 1.);
+    gl_FragColor = texture2D(uIn1, uv) * c;
+  }
+  '''
+
 shader2 = do
   uniforms: {}
   vertexShader: """
@@ -62,11 +87,11 @@ shader1 = do
   }
   ''')
 
-shaders = [shader1, shader2]
+shaders = [shader1]
 
 renderer = new ShaderRenderer shaders, {root: '#root .box:nth-child(1)'}
 renderer.animate!
 
-renderer2 = new ShaderRenderer shader2, {root: '#root .box:nth-child(2)'}
+renderer2 = new ShaderRenderer shader3, {root: '#root .box:nth-child(2)'}
 renderer2.input renderer
 renderer2.animate!
