@@ -1,4 +1,4 @@
-#pragma glslify: noise = require('./noise.shader')
+#pragma glslify: noise = require('./noise.glsl')
 #define NUM_OCTAVES 5
 
 float fbm(float x) {

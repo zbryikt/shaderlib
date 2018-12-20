@@ -5,7 +5,7 @@ cloud = require("./sample/cloud");
 window.addEventListener('load', function(){
   var shader, renderer;
   shader = {
-    fragmentShader: glslify('precision highp float;\n#pragma glslify: aspect_ratio = require("../../src/aspect_ratio.shader")\n#pragma glslify: quantize = require("../../src/quantize.shader")\n#pragma glslify: fbm = require("../../src/fbm.shader")\n#pragma glslify: noise = require("glsl-noise/simplex/2d")\n#pragma glslify: gradient = require("../../src/raster/gradient/3d1.shader")\n\nuniform float uTime;\nuniform vec2 uResolution;\n\nvoid main() {\n  vec3 uv = aspect_ratio(uResolution, 1);\n  float f = pow(pow(uv.x, 2.) - pow(uv.y, 2.), 1.7);\n  vec3 c2 = vec3(.06, .45, .83);\n  vec3 c1 = vec3(.76, .91, .81);\n\n  gl_FragColor = vec4(mix(c1, c2, f), 1.);\n}')
+    fragmentShader: glslify('precision highp float;\n#pragma glslify: aspect_ratio = require("../func/aspect_ratio.shader")\n#pragma glslify: quantize = require("../func/quantize.shader")\n#pragma glslify: fbm = require("../func/fbm.shader")\n#pragma glslify: noise = require("glsl-noise/simplex/2d")\n#pragma glslify: gradient = require("../raster/gradient/3d1.shader")\n\nuniform float uTime;\nuniform vec2 uResolution;\n\nvoid main() {\n  vec3 uv = aspect_ratio(uResolution, 1);\n  float f = pow(pow(uv.x, 2.) - pow(uv.y, 2.), 1.7);\n  vec3 c2 = vec3(.06, .45, .83);\n  vec3 c1 = vec3(.76, .91, .81);\n\n  gl_FragColor = vec4(mix(c1, c2, f), 1.);\n}')
   };
   /*
   vec3 raster_gradient_3d1(vec2 uv, vec3 c1, vec3 c2, vec3 c3, float rate) {
