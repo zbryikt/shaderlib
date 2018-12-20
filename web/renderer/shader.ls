@@ -161,6 +161,11 @@
           gl.clear gl.COLOR_BUFFER_BIT
           gl.drawArrays gl.TRIANGLES, 0, 6
 
+    setSize: (w, h) ->
+      @ <<< width: w, height: h
+      @domElement <<< width: w, height: h
+      @resize!
+
     resize: ->
       for i from 0 til @programs.length =>
         pobj = @programs[i].obj

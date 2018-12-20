@@ -16,11 +16,15 @@ shader = do
 
     void main() {
       vec3 uv = aspect_ratio(uResolution, 1);
-      float f = pow(pow(uv.x, 2.) - pow(uv.y, 2.), 1.7);
-      vec3 c2 = vec3(.06, .45, .83);
-      vec3 c1 = vec3(.76, .91, .81);
-
-      gl_FragColor = vec4(mix(c1, c2, f), 1.);
+      vec3 c = vec3(
+        pow(0. + uv.x, 0.7) * pow(0. + uv.y, 1.0),
+        pow(1. - uv.x, 1.0) * (1. - length(0.5 - uv.y) * .2),
+        pow(0. + uv.x, 0.8) * pow(1. - uv.y, 0.5)
+      );
+      vec3 c1 = vec3(1., 1., .2);
+      vec3 c2 = vec3(1., .3, .3);
+      vec3 c3 = vec3(.9, .3, .7);
+      gl_FragColor = vec4(c.x * c1 + c.y * c2 + c.z * c3, 1.);
     }
   '''
 

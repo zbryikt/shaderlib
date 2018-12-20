@@ -215,6 +215,15 @@ var slice$ = [].slice;
       }
       return results$;
     },
+    setSize: function(w, h){
+      var ref$;
+      this.width = w;
+      this.height = h;
+      ref$ = this.domElement;
+      ref$.width = w;
+      ref$.height = h;
+      return this.resize();
+    },
     resize: function(){
       var i$, to$, i, pobj, uResolution, results$ = [];
       for (i$ = 0, to$ = this.programs.length; i$ < to$; ++i$) {
