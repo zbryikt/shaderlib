@@ -1,4 +1,4 @@
-#pragma glslify: fbm = require('../fbm.shader')
+#pragma glslify: fbm = require('../func/fbm.glsl')
 #define NUM_ITERATION 5.
 
 float raster_cloud(vec2 uv, float t, vec2 dir, float delta) {
