@@ -149,7 +149,7 @@ var slice$ = [].slice;
       }
       gl.useProgram(pobj);
       if (shader.buffer) {
-        shader.buffer(program);
+        shader.buffer(this, program);
       } else {
         pdata.buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, pdata.buffer);
@@ -206,7 +206,7 @@ var slice$ = [].slice;
         gl.bindFramebuffer(gl.FRAMEBUFFER, pdata.fbo);
         gl.viewport(0, 0, this.width, this.height);
         if (that = shader.render) {
-          results$.push(that(this.programs[i], t));
+          results$.push(that(this, this.programs[i], t));
         } else {
           gl.clearColor(1, 0, 0, 1);
           gl.clear(gl.COLOR_BUFFER_BIT);

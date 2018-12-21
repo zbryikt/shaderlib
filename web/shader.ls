@@ -112,7 +112,7 @@
         console.log gl.getProgramInfoLog(pobj)
 
       gl.useProgram pobj
-      if shader.buffer => shader.buffer program
+      if shader.buffer => shader.buffer @, program
       else
         pdata.buffer = gl.createBuffer!
         gl.bindBuffer gl.ARRAY_BUFFER, pdata.buffer
@@ -155,7 +155,7 @@
         gl.bindFramebuffer gl.FRAMEBUFFER, pdata.fbo
         gl.viewport 0, 0, @width, @height
 
-        if shader.render => that @programs[i], t
+        if shader.render => that @, @programs[i], t
         else
           gl.clearColor 1,0,0,1
           gl.clear gl.COLOR_BUFFER_BIT
