@@ -5,14 +5,9 @@ var slice$ = [].slice;
   defaultVertexShader = "precision highp float;\nattribute vec3 position;\nvoid main() {\n  gl_Position = vec4(position, 1.);\n}";
   defaultFragmentShader = "precision highp float;\nvoid main() {\n  gl_FragColor = vec4(0., 0., 0., 1.);\n}";
   ShaderRenderer = function(shader, options){
-    var ref$, root, canvas, gl;
+    var root, canvas, gl;
     options == null && (options = {});
-    ref$ = (this.width = 320, this.height = 240, this);
-    ref$.root = options.root;
-    ref$.width = options.width;
-    ref$.height = options.height;
-    ref$.pipeline = options.pipeline;
-    ref$.debug = options.debug;
+    import$((this.width = 320, this.height = 240, this.scale = 1, this), options);
     root = this.root;
     if (root) {
       this.root = typeof root === 'string' ? document.querySelector(root) : root;
@@ -36,9 +31,11 @@ var slice$ = [].slice;
       }
       this.inited = true;
       this.gl = gl = canvas.getContext('webgl');
-      canvas.width = this.width;
-      canvas.height = this.height;
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      canvas.width = this.width * this.scale;
+      canvas.height = this.height * this.scale;
+      canvas.style.width = this.width + "px";
+      canvas.style.height = this.height + "px";
+      gl.viewport(0, 0, gl.drawingBufferWidth * this.scale, gl.drawingBufferHeight * this.scale);
       this.programs = [];
       for (i$ = 0, to$ = this.shader.length; i$ < to$; ++i$) {
         i = i$;
@@ -68,7 +65,7 @@ var slice$ = [].slice;
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
       if (!img) {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width * this.scale, this.height * this.scale, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
       } else {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
       }
@@ -204,7 +201,7 @@ var slice$ = [].slice;
           }
         }
         gl.bindFramebuffer(gl.FRAMEBUFFER, pdata.fbo);
-        gl.viewport(0, 0, this.width, this.height);
+        gl.viewport(0, 0, this.width * this.scale, this.height * this.scale);
         if (that = shader.render) {
           results$.push(that(this, this.programs[i], t));
         } else {
@@ -220,8 +217,10 @@ var slice$ = [].slice;
       this.width = w;
       this.height = h;
       ref$ = this.domElement;
-      ref$.width = w;
-      ref$.height = h;
+      ref$.width = w * this.scale;
+      ref$.height = h * this.scale;
+      this.domElement.width = w + "px";
+      this.domElement.height = h + "px";
       return this.resize();
     },
     resize: function(){
@@ -231,7 +230,7 @@ var slice$ = [].slice;
         pobj = this.programs[i].obj;
         this.gl.useProgram(pobj);
         uResolution = this.gl.getUniformLocation(pobj, "uResolution");
-        results$.push(this.gl.uniform2fv(uResolution, [this.width, this.height]));
+        results$.push(this.gl.uniform2fv(uResolution, [this.width * this.scale, this.height * this.scale]));
       }
       return results$;
     }

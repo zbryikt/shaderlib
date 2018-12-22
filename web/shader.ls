@@ -19,7 +19,8 @@
   # width / height: only used when there's not root
   # shader: array of shader. output of each shader will be the uIn1 texture for next shader.
   ShaderRenderer = (shader, options = {}) ->
-    @ <<< {width: 320, height: 240} <<< options{root, width, height, pipeline, debug}
+    # options: root, width, height, pipeline, debug, scale
+    @ <<< {width: 320, height: 240, scale: 1} <<< options
     root = @root
     if root => @root = if typeof(root) == \string => document.querySelector root else root
     @shader = if Array.isArray shader => shader else [shader]
@@ -37,8 +38,10 @@
         @ <<< box{width, height} <<< {inited: true}
       @inited = true
       @gl = gl = canvas.getContext \webgl
-      canvas <<< @{width, height}
-      gl.viewport 0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight
+      canvas <<< width: @width * @scale, height: @height * @scale
+      canvas.style.width = "#{@width}px"
+      canvas.style.height = "#{@height}px"
+      gl.viewport 0, 0, gl.drawingBufferWidth * @scale, gl.drawingBufferHeight * @scale
 
       @programs = []
       for i from 0 til @shader.length =>
@@ -64,7 +67,7 @@
       gl.texParameteri gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST
       gl.texParameteri gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST
       if !img =>
-        gl.texImage2D gl.TEXTURE_2D, 0, gl.RGBA, @width, @height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null
+        gl.texImage2D gl.TEXTURE_2D, 0, gl.RGBA, @width * @scale, @height * @scale, 0, gl.RGBA, gl.UNSIGNED_BYTE, null
       else gl.texImage2D gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img
       return texture
 
@@ -153,7 +156,7 @@
             gl["uniform#{v.type}"](u, v.value)
         if i == 0 => for k,v of @inputs => @texture @programs[i], k, v
         gl.bindFramebuffer gl.FRAMEBUFFER, pdata.fbo
-        gl.viewport 0, 0, @width, @height
+        gl.viewport 0, 0, @width * @scale, @height * @scale
 
         if shader.render => that @, @programs[i], t
         else
@@ -163,7 +166,9 @@
 
     setSize: (w, h) ->
       @ <<< width: w, height: h
-      @domElement <<< width: w, height: h
+      @domElement <<< width: w * @scale, height: h * @scale
+      @domElement.width = "#{w}px"
+      @domElement.height = "#{h}px"
       @resize!
 
     resize: ->
@@ -171,7 +176,7 @@
         pobj = @programs[i].obj
         @gl.useProgram pobj
         uResolution = @gl.getUniformLocation pobj, "uResolution"
-        @gl.uniform2fv(uResolution, [@width, @height])
+        @gl.uniform2fv(uResolution, [@width * @scale, @height * @scale])
 
   if module? => module.exports = ShaderRenderer
   else if window? => window.ShaderRenderer = ShaderRenderer
