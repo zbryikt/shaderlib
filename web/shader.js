@@ -219,8 +219,8 @@ var slice$ = [].slice;
       ref$ = this.domElement;
       ref$.width = w * this.scale;
       ref$.height = h * this.scale;
-      this.domElement.width = w + "px";
-      this.domElement.height = h + "px";
+      this.domElement.style.width = w + "px";
+      this.domElement.style.height = h + "px";
       return this.resize();
     },
     resize: function(){

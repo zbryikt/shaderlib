@@ -167,8 +167,8 @@
     setSize: (w, h) ->
       @ <<< width: w, height: h
       @domElement <<< width: w * @scale, height: h * @scale
-      @domElement.width = "#{w}px"
-      @domElement.height = "#{h}px"
+      @domElement.style.width = "#{w}px"
+      @domElement.style.height = "#{h}px"
       @resize!
 
     resize: ->
