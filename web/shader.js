@@ -45,6 +45,19 @@ var slice$ = [].slice;
       this.buildPipeline();
       return this.resize();
     },
+    sizeof: function(type){
+      var d, gl, map, i$, to$, i;
+      if (!this.sizeof.data) {
+        this.sizeof.data = d = {};
+        gl = this.gl;
+        map = ['BYTE', '1', 'UNSIGNED_BYTE', '1', 'SHORT', '2', 'UNSIGNED_SHORT', '2', 'INT', '4', 'UNSIGNED_INT', '4', 'FIXED', '4', 'HALF_FLOAT', '2', 'FLOAT', '4', 'DOUBLE', '8'];
+        for (i$ = 0, to$ = map.length; i$ < to$; i$ += 2) {
+          i = i$;
+          d[gl[map[i]]] = map[i + 1];
+        }
+      }
+      return this.sizeof.data[type];
+    },
     texture: function(program, uName, img){
       var gl, ref$, pdata, pobj, map, texture, idx, uTexture;
       gl = this.gl;
@@ -157,6 +170,68 @@ var slice$ = [].slice;
         gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
       }
       return program;
+    },
+    mergeBuffers: function(buffers){
+      var list, k, v, length, merged, offset, i$, len$, buf;
+      buffers == null && (buffers = []);
+      list = Array.isArray(buffers)
+        ? buffers
+        : (function(){
+          var ref$, results$ = [];
+          for (k in ref$ = buffers) {
+            v = ref$[k];
+            results$.push((v.name = k, v));
+          }
+          return results$;
+        }());
+      length = list.reduce(function(a, b){
+        return a + b.data.length;
+      }, 0);
+      merged = new Float32Array(length);
+      offset = 0;
+      for (i$ = 0, len$ = list.length; i$ < len$; ++i$) {
+        buf = list[i$];
+        buf.offset = offset;
+        buf.length = buf.data.length;
+        merged.set(buf.data, offset);
+        offset += buf.length;
+      }
+      return {
+        buffer: merged,
+        list: list
+      };
+    },
+    bindAttrs: function(program, buffers){
+      var gl, list, k, v, i$, len$, buf, opt, loc, results$ = [];
+      gl = this.gl;
+      list = Array.isArray(buffers)
+        ? buffers
+        : (function(){
+          var ref$, results$ = [];
+          for (k in ref$ = buffers) {
+            v = ref$[k];
+            results$.push((v.name = k, v));
+          }
+          return results$;
+        }());
+      for (i$ = 0, len$ = list.length; i$ < len$; ++i$) {
+        buf = list[i$];
+      }
+      opt = {
+        compSize: 3,
+        type: gl.FLOAT,
+        normalized: false,
+        stride: 0,
+        offset: 0
+      };
+      for (i$ = 0, len$ = list.length; i$ < len$; ++i$) {
+        buf = list[i$];
+        opt = import$(opt, buf);
+        loc = gl.getAttribLocation(program.obj, buf.name);
+        gl.vertexAttribPointer(loc, opt.compSize, opt.type, opt.normalized, opt.stride, opt.offset * this.sizeof(opt.type));
+        results$.push(gl.enableVertexAttribArray(loc));
+      }
+      return results$;
     },
     animate: function(cb, options){
       var _, this$ = this;

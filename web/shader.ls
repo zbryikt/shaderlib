@@ -50,6 +50,15 @@
       @build-pipeline!
       @resize!
 
+    sizeof: (type)->
+      if !@sizeof.data =>
+        @sizeof.data = d = {}
+        gl = @gl
+        map = <[BYTE 1 UNSIGNED_BYTE 1 SHORT 2 UNSIGNED_SHORT 2
+        INT 4 UNSIGNED_INT 4 FIXED 4 HALF_FLOAT 2 FLOAT 4 DOUBLE 8]>
+        for i from 0 til map.length by 2 => d[gl[map[i]]] = map[i + 1]
+      return @sizeof.data[type]
+
     texture: (program, uName, img) ->
       gl = @gl
       [pdata, pobj] = [program.data, program.obj]
@@ -133,6 +142,29 @@
         gl.vertexAttribPointer positionLocation, 3, gl.FLOAT, false, 0, 0
 
       return program
+
+    merge-buffers: (buffers = []) ->
+      list = if Array.isArray(buffers) => buffers else [(v <<< {name: k}) for k,v of buffers]
+      length = list.reduce ((a,b) -> a + b.data.length), 0
+      merged = new Float32Array length
+      offset = 0
+      for buf in list =>
+        buf.offset = offset
+        buf.length = buf.data.length
+        merged.set buf.data, offset
+        offset += buf.length
+      return {buffer: merged, list}
+
+    bind-attrs: (program, buffers) ->
+      gl = @gl
+      list = if Array.isArray(buffers) => buffers else [(v <<< {name: k}) for k,v of buffers]
+      for buf in list =>
+      opt = {comp-size: 3, type: gl.FLOAT, normalized: false, stride: 0, offset: 0}
+      for buf in list =>
+        opt = opt <<< buf
+        loc = gl.getAttribLocation program.obj, buf.name
+        gl.vertexAttribPointer loc, opt.comp-size, opt.type, opt.normalized, opt.stride, opt.offset * @sizeof(opt.type)
+        gl.enableVertexAttribArray loc
 
     animate: (cb, options) ->
       _ = (t) ~>
