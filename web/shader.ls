@@ -143,6 +143,8 @@
 
       return program
 
+    # buffers:
+    #   [{ data: Float32Array, name: 'attrName', compSize: <component-size>}, ...]
     merge-buffers: (buffers = []) ->
       list = if Array.isArray(buffers) => buffers else [(v <<< {name: k}) for k,v of buffers]
       length = list.reduce ((a,b) -> a + b.data.length), 0
