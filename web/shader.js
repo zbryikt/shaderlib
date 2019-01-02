@@ -127,12 +127,16 @@ var slice$ = [].slice;
         for (i$ = 0, to$ = ps.length - 1; i$ < to$; ++i$) {
           i = i$;
           ps[i].data.fbo = gl.createFramebuffer();
+          ps[i].data.db = gl.createRenderbuffer();
         }
         for (i$ = 1, to$ = ps.length; i$ < to$; ++i$) {
           i = i$;
           ps[i].data.uIn1 = this.texture(ps[i], 'uIn1', null);
           gl.bindFramebuffer(gl.FRAMEBUFFER, ps[i - 1].data.fbo);
-          results$.push(gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, ps[i].data.uIn1, 0));
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, ps[i].data.uIn1, 0);
+          gl.bindRenderbuffer(gl.RENDERBUFFER, ps[i - 1].data.db);
+          gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
+          results$.push(gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, ps[i - 1].data.db));
         }
         return results$;
       }
@@ -263,7 +267,7 @@ var slice$ = [].slice;
         for (k in ref$ = shader.uniforms || {}) {
           v = ref$[k];
           if (v.type === 't') {
-            this.texture(pobj, k, v.value);
+            this.texture(this.programs[i], k, v.value);
           } else {
             u = gl.getUniformLocation(pobj, k);
             gl["uniform" + v.type](u, v.value);

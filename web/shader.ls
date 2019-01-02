@@ -106,10 +106,17 @@
       else
         for i from 0 til ps.length - 1 =>
           ps[i].data.fbo = gl.createFramebuffer!
+          ps[i].data.db = gl.createRenderbuffer!
         for i from 1 til ps.length =>
           ps[i].data.uIn1 = @texture ps[i], \uIn1, null
           gl.bindFramebuffer gl.FRAMEBUFFER, ps[i - 1].data.fbo
           gl.framebufferTexture2D gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, ps[i].data.uIn1, 0
+          gl.bindRenderbuffer gl.RENDERBUFFER, ps[i - 1].data.db
+          gl.renderbufferStorage gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, @width, @height
+          gl.framebufferRenderbuffer gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, ps[i - 1].data.db
+
+
+
 
     make-program: (shader, pprogram) ->
       gl = @gl
@@ -184,7 +191,7 @@
         uTime = gl.getUniformLocation pobj, "uTime"
         gl.uniform1f(uTime, t)
         for k,v of (shader.uniforms or {}) =>
-          if v.type == \t => @texture pobj, k, v.value
+          if v.type == \t => @texture @programs[i], k, v.value
           else
             u = gl.getUniformLocation pobj, k
             gl["uniform#{v.type}"](u, v.value)
