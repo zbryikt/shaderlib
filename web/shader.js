@@ -237,9 +237,20 @@ var slice$ = [].slice;
       }
       return results$;
     },
+    destroy: function(){
+      this.stop();
+      return this.root.removeChild(this.domElement);
+    },
+    stop: function(){
+      return this.animate.running = false;
+    },
     animate: function(cb, options){
       var _, this$ = this;
+      this.animate.running = true;
       _ = function(t){
+        if (!this$.animate.running) {
+          return;
+        }
         requestAnimationFrame(function(t){
           return _(t * 0.001);
         });
@@ -270,7 +281,11 @@ var slice$ = [].slice;
             this.texture(this.programs[i], k, v.value);
           } else {
             u = gl.getUniformLocation(pobj, k);
-            gl["uniform" + v.type](u, v.value);
+            if (/^Matrix/.exec(v.type)) {
+              gl["uniform" + v.type](u, false, v.value);
+            } else {
+              gl["uniform" + v.type](u, v.value);
+            }
           }
         }
         if (i === 0) {

@@ -175,8 +175,15 @@
         gl.vertexAttribPointer loc, opt.comp-size, opt.type, opt.normalized, opt.stride, opt.offset * @sizeof(opt.type)
         gl.enableVertexAttribArray loc
 
+    destroy: ->
+      @stop!
+      @root.removeChild @domElement
+
+    stop: -> @animate.running = false
     animate: (cb, options) ->
+      @animate.running = true
       _ = (t) ~>
+        if !@animate.running => return
         requestAnimationFrame (t) ~> _ t * 0.001
         if cb => cb t
         @render t, options
@@ -194,7 +201,8 @@
           if v.type == \t => @texture @programs[i], k, v.value
           else
             u = gl.getUniformLocation pobj, k
-            gl["uniform#{v.type}"](u, v.value)
+            if /^Matrix/.exec(v.type) => gl["uniform#{v.type}"](u, false, v.value)
+            else gl["uniform#{v.type}"](u, v.value)
         if i == 0 => for k,v of @inputs => @texture @programs[i], k, v
         gl.bindFramebuffer gl.FRAMEBUFFER, pdata.fbo
         gl.viewport 0, 0, @width * @scale, @height * @scale
