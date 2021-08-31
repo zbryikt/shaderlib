@@ -1,8 +1,7 @@
-require! <[chokidar http fs path pug stylus markdown js-yaml]>
+require! <[chokidar http fs path pug stylus marked js-yaml]>
 require! 'uglify-js': uglify, LiveScript: lsc
 
 useMarkdown = true
-markdown = markdown.markdown
 
 RegExp.escape = -> it.replace /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"
 
@@ -11,6 +10,7 @@ cwd-re = new RegExp RegExp.escape "#cwd#{if cwd[* - 1]=='/' => "" else \/}"
 
 pug-extapi = do
   md: -> markdown.toHTML it
+  md: (text, opt) -> marked text
   yaml: -> js-yaml.safe-load fs.read-file-sync it
   yamls: (dir) ->
     ret = fs.readdir-sync dir
@@ -254,7 +254,7 @@ server = (req, res) ->
   buf = fs.readFileSync file-path
   if useMarkdown =>
     if /\.md$/.exec(file-path) =>
-      buf = markdown.toHTML(buf.toString!).toString!
+      buf = marked(buf.toString!)
       buf = [
         '<meta charset="utf-8">'
         '<link rel="stylesheet" type="text/css" href="/assets/markdown-air/air.css"></link>'

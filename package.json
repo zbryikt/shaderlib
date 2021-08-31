@@ -24,8 +24,7 @@
     "glsl-halftone": "^1.0.4",
     "glslify": "zbryikt/glslify",
     "js-yaml": "^3.10.0",
-    "markdown": "=0.5.0",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "stylus": "^0.54.5",
     "uglify-js": "=3.2.0"
   }
