@@ -1,31 +1,39 @@
 {
-  "author": "Kirby Wu",
+  "author": "zbryikt",
   "name": "shaderlib",
   "description": "Shaderlib",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/zbryikt/shaderlib",
+  "files": [ "lib/**/*" ],
+  "exports": {
+    "./": "./lib/"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/zbryikt/shaderlib"
   },
   "engines": {
-    "node": ">=0.12.6",
-    "npm": ">=1.2.2"
+    "node": ">=10.14.1",
+    "npm": ">=6.4.1"
   },
   "scripts": {
-    "start": "node_modules/.bin/lsc server.ls",
-    "restart": "node_modules\\.bin\\lsc server.ls"
+    "start": "./node_modules/.bin/lsc web/server.ls"
   },
-  "dependencies": {
-    "livescript": "^1.6.0",
+  "devDependencies": {
+    "@loadingio/ldquery": "^2.1.0",
+    "@zbryikt/template": "^2.3.15",
+    "@plotdb/srcbuild": "^0.0.16",
     "browserify": "^16.2.3",
-    "chokidar": "^3.0.0",
+    "glslify": "github:zbryikt/glslify",
+    "fedep": "^0.0.12",
     "glsl-edge-detection": "^1.1.0",
     "glsl-halftone": "^1.0.4",
-    "glslify": "zbryikt/glslify",
-    "js-yaml": "^3.10.0",
-    "pug": "^3.0.1",
-    "stylus": "^0.54.5",
-    "uglify-js": "=3.2.0"
+    "livescript": "^1.6.0"
+  },
+  "frontendDependencies": {
+    "root": "web/static/assets/lib",
+    "modules": [
+      "@loadingio/ldquery"
+    ]
   }
 }

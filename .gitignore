@@ -1,0 +1,4 @@
+.*.swp
+.swp
+web/.view
+node_modules
