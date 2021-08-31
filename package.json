@@ -23,7 +23,7 @@
     "glsl-edge-detection": "^1.1.0",
     "glsl-halftone": "^1.0.4",
     "glslify": "zbryikt/glslify",
-    "js-yaml": "^3.10.0",
+    "js-yaml": "^3.13.1",
     "pug": "^3.0.1",
     "stylus": "^0.54.5",
     "uglify-js": "=3.2.0"
