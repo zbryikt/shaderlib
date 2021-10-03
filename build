@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+rm -rf dist
+mkdir -p dist
+
+echo "build src/renderer.ls -> dist/index.js ..."
+./node_modules/.bin/lsc -cp --no-header src/renderer.ls > dist/index.js
+
+echo "minifying index.js ..."
+./node_modules/.bin/uglifyjs dist/index.js > dist/index.min.js
+
+echo "Copy dist/ to web/ ..."
+rm -rf web/static/assets/lib/shaderlib/dev/
+mkdir -p web/static/assets/lib/shaderlib/dev/
+cp -R dist/* web/static/assets/lib/shaderlib/dev/
+echo "done."
+

@@ -4,7 +4,8 @@
   "description": "Shaderlib",
   "version": "0.0.2",
   "homepage": "https://github.com/zbryikt/shaderlib",
-  "files": [ "lib/**/*" ],
+  "files": [ "lib/**/*", "dist/**/*" ],
+  "main": "./dist/renderer.js",
   "workspaces": [ "lib" ],
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "fedep": "^0.0.16",
     "glsl-edge-detection": "^1.1.0",
     "glsl-halftone": "^1.0.4",
+    "uglify-js": "^3.2.0",
     "livescript": "^1.6.0"
   },
   "frontendDependencies": {

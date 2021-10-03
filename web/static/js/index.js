@@ -27,7 +27,7 @@ window.addEventListener('load', function(){
     );
   }
   */
-  renderer = new ShaderRenderer([shader], {
+  renderer = new shaderlib.renderer([shader], {
     root: '#root'
   });
   renderer.init();

@@ -32,6 +32,6 @@ vec3 raster_gradient_3d1(vec2 uv, vec3 c1, vec3 c2, vec3 c3, float rate) {
   );
 }
 */
-renderer = new ShaderRenderer [shader], {root: '#root'}
+renderer = new shaderlib.renderer [shader], {root: '#root'}
 renderer.init!
 renderer.animate!

@@ -1,9 +1,8 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function(){
-  var defaultVertexShader, defaultFragmentShader, ShaderRenderer;
+  var defaultVertexShader, defaultFragmentShader, renderer;
   defaultVertexShader = "precision highp float;\nattribute vec3 position;\nvoid main() {\n  gl_Position = vec4(position, 1.);\n}";
   defaultFragmentShader = "precision highp float;\nvoid main() {\n  gl_FragColor = vec4(0., 0., 0., 1.);\n}";
-  ShaderRenderer = function(shader, options){
+  renderer = function(shader, options){
     var root, canvas, gl;
     options == null && (options = {});
     import$((this.width = 320, this.height = 240, this.scale = 1, this), options);
@@ -19,7 +18,7 @@
     this.inputs = {};
     return this;
   };
-  ShaderRenderer.prototype = import$(Object.create(Object.prototype), {
+  renderer.prototype = import$(Object.create(Object.prototype), {
     init: function(){
       var canvas, box, gl, i$, to$, i, program;
       canvas = this.domElement;
@@ -97,7 +96,7 @@
       return results$;
     },
     setInput: function(idx, src){
-      return this.inputs["uIn" + idx] = src instanceof ShaderRenderer ? src.domElement : src;
+      return this.inputs["uIn" + idx] = src instanceof renderer ? src.domElement : src;
     },
     makeShader: function(code, type){
       var gl, shader;
@@ -333,19 +332,22 @@
     }
   });
   if (typeof module != 'undefined' && module !== null) {
-    return module.exports = ShaderRenderer;
+    module.exports = {
+      renderer: renderer
+    };
   } else if (typeof window != 'undefined' && window !== null) {
-    return window.ShaderRenderer = ShaderRenderer;
+    window.shaderlib = {
+      renderer: renderer
+    };
   }
-})();
-function import$(obj, src){
-  var own = {}.hasOwnProperty;
-  for (var key in src) if (own.call(src, key)) obj[key] = src[key];
-  return obj;
-}
-function in$(x, xs){
-  var i = -1, l = xs.length >>> 0;
-  while (++i < l) if (x === xs[i]) return true;
-  return false;
-}
-},{}]},{},[1]);
+  function import$(obj, src){
+    var own = {}.hasOwnProperty;
+    for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+    return obj;
+  }
+  function in$(x, xs){
+    var i = -1, l = xs.length >>> 0;
+    while (++i < l) if (x === xs[i]) return true;
+    return false;
+  }
+}).call(this);
