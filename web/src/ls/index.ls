@@ -4,11 +4,11 @@ require! <[glslify]>
 shader = do
   fragmentShader: glslify '''
     precision highp float;
-    #pragma glslify: aspect_ratio = require("../../../lib/func/aspect_ratio.glsl")
-    #pragma glslify: quantize = require("../../../lib/func/quantize.glsl")
-    #pragma glslify: fbm = require("../../../lib/func/fbm.glsl")
+    #pragma glslify: aspect_ratio = require("lib/func/aspect_ratio.glsl")
+    #pragma glslify: quantize = require("lib/func/quantize.glsl")
+    #pragma glslify: fbm = require("lib/func/fbm.glsl")
     #pragma glslify: noise = require("glsl-noise/simplex/2d")
-    #pragma glslify: gradient = require("../../../lib/raster/gradient/3d1.glsl")
+    #pragma glslify: gradient = require("lib/raster/gradient/3d1.glsl")
 
     uniform float uTime;
     uniform vec2 uResolution;

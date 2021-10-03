@@ -13,10 +13,10 @@ shader3 = do
   """
   fragmentShader: glslify '''
   precision highp float;
-  #pragma glslify: fxaa = require('../../../../lib/func/fxaa.glsl')
-  #pragma glslify: grayscale = require('../../../../lib/func/grayscale.glsl')
-  #pragma glslify: blur = require('../../../../lib/blur/13.glsl')
-  #pragma glslify: sobel = require('../../../../lib/func/sobel.glsl')
+  #pragma glslify: fxaa = require('lib/func/fxaa.glsl')
+  #pragma glslify: grayscale = require('lib/func/grayscale.glsl')
+  #pragma glslify: blur = require('lib/blur/13.glsl')
+  #pragma glslify: sobel = require('lib/func/sobel.glsl')
   #pragma glslify: halftone = require('glsl-halftone')
   #pragma glslify: edge = require('glsl-edge-detection')
   uniform sampler2D uIn1;
@@ -39,7 +39,7 @@ shader2 = do
   """
   fragmentShader: glslify '''
   precision highp float;
-  #pragma glslify: fbm = require('../../../../lib/func/fbm.glsl')
+  #pragma glslify: fbm = require('lib/func/fbm.glsl')
   uniform sampler2D uIn1;
   uniform vec2 uResolution;
   void main() {
@@ -64,10 +64,10 @@ shader1 = do
   """
   fragmentShader: glslify('''
   precision highp float;
-  #pragma glslify: gradient = require('../../../../lib/raster/gradient/3d1.glsl')
-  #pragma glslify: cloud = require('../../../../lib/raster/cloud.glsl')
-  #pragma glslify: vignette = require('../../../../lib/func/vignette.glsl')
-  //#pragma glslify: color_shift = require('../../../../lib/func/color_shift.glsl')
+  #pragma glslify: gradient = require('lib/raster/gradient/3d1.glsl')
+  #pragma glslify: cloud = require('lib/raster/cloud.glsl')
+  #pragma glslify: vignette = require('lib/func/vignette.glsl')
+  //#pragma glslify: color_shift = require('lib/func/color_shift.glsl')
   uniform float uTime;
   uniform vec3 color;
   uniform vec2 uResolution;

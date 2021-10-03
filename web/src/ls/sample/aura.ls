@@ -4,8 +4,8 @@ require! <[glslify]>
 shader = do
   fragmentShader: glslify '''
     precision highp float;
-    #pragma glslify: aspect_ratio = require("../../../../lib/func/aspect_ratio.glsl")
-    #pragma glslify: fbm = require("../../../../lib/func/fbm.glsl")
+    #pragma glslify: aspect_ratio = require("lib/func/aspect_ratio.glsl")
+    #pragma glslify: fbm = require("lib/func/fbm.glsl")
     #define PI2 6.2831852
 
     uniform float uTime;

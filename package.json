@@ -5,9 +5,7 @@
   "version": "0.0.2",
   "homepage": "https://github.com/zbryikt/shaderlib",
   "files": [ "lib/**/*" ],
-  "exports": {
-    "./": "./lib/"
-  },
+  "workspaces": [ "lib" ],
   "repository": {
     "type": "git",
     "url": "https://github.com/zbryikt/shaderlib"

@@ -3,7 +3,7 @@ require! <[glslify]>
 module.exports = do
   fragmentShader: glslify '''
   precision highp float;
-  #pragma glslify: gradient = require('../../../../lib/raster/gradient/3d1.glsl')
+  #pragma glslify: gradient = require('lib/raster/gradient/3d1.glsl')
 
   uniform vec2 uResolution;
   uniform float uTime;
