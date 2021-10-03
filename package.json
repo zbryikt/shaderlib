@@ -20,12 +20,12 @@
     "start": "./node_modules/.bin/lsc web/server.ls"
   },
   "devDependencies": {
-    "@loadingio/ldquery": "^2.1.0",
-    "@zbryikt/template": "^2.3.15",
-    "@plotdb/srcbuild": "^0.0.16",
-    "browserify": "^16.2.3",
-    "glslify": "github:zbryikt/glslify",
-    "fedep": "^0.0.12",
+    "@loadingio/ldquery": "^2.2.0",
+    "@zbryikt/template": "^2.3.21",
+    "@plotdb/srcbuild": "^0.0.24",
+    "browserify": "^17.0.0",
+    "glslify": "^7.1.1",
+    "fedep": "^0.0.16",
     "glsl-edge-detection": "^1.1.0",
     "glsl-halftone": "^1.0.4",
     "livescript": "^1.6.0"
