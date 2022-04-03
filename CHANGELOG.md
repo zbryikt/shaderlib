@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.4
+
+ - fix bug: `main` field in `package.json` use incorrect file name
+
+
 ## v0.0.3
 
  - move ShaderRenderer (in web/src/ls/shader.ls) to shaderlib.render ( src/renderer.ls ) as a module object.
