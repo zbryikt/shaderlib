@@ -4,8 +4,8 @@ html
     link(rel="stylesheet",type="text/css",href="/css/index.css")
   body
     #root
-      //.box
-      //.box
-    script(src="assets/lib/@loadingio/ldquery/main/ldq.min.js")
-    script(src="assets/lib/shaderlib/dev/index.min.js")
-    script(src="js/index.js")
+    +script([
+      {name: "@loadingio/ldquery"},
+      {name: "shaderlib", version: "dev"},
+      {url: "/js/index.js"}
+    ])
