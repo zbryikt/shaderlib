@@ -2,7 +2,7 @@
   "author": "zbryikt",
   "name": "shaderlib",
   "description": "Shaderlib",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "https://github.com/zbryikt/shaderlib",
   "files": [ "lib/**/*", "dist/**/*" ],
   "browser": "./dist/index.min.js",
@@ -20,9 +20,9 @@
     "start": "./node_modules/.bin/lsc web/server.ls"
   },
   "devDependencies": {
-    "@loadingio/ldquery": "^3.0.3",
-    "@zbryikt/template": "^2.3.34",
-    "@plotdb/srcbuild": "^0.0.40",
+    "@loadingio/ldquery": "^3.0.4",
+    "@zbryikt/template": "^2.3.38",
+    "@plotdb/srcbuild": "^0.0.47",
     "browserify": "^17.0.0",
     "glslify": "^7.1.1",
     "fedep": "^1.1.7",

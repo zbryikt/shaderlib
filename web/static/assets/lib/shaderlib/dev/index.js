@@ -3,7 +3,7 @@
   defaultVertexShader = "precision highp float;\nattribute vec3 position;\nvoid main() {\n  gl_Position = vec4(position, 1.);\n}";
   defaultFragmentShader = "precision highp float;\nvoid main() {\n  gl_FragColor = vec4(0., 0., 0., 1.);\n}";
   renderer = function(shader, options){
-    var root, canvas, gl;
+    var root, gl;
     options == null && (options = {});
     import$((this.width = 320, this.height = 240, this.scale = 1, this), options);
     root = this.root;
@@ -13,27 +13,39 @@
     this.shader = Array.isArray(shader)
       ? shader
       : [shader];
-    this.domElement = canvas = document.createElement('canvas');
     this.gl = gl = null;
     this.inputs = {};
     return this;
   };
   renderer.prototype = import$(Object.create(Object.prototype), {
+    config: function(o){
+      var this$ = this;
+      this.width = o.width;
+      this.height = o.height;
+      ['width', 'height', 'scale'].map(function(n){
+        if (o[n] != null) {
+          return this$[n] = o[n];
+        }
+      });
+      return this.resize();
+    },
+    setSize: function(w, h){
+      this.width = w;
+      this.height = h;
+      return this.resize();
+    },
     init: function(){
-      var canvas, box, gl, i$, to$, i, program;
-      canvas = this.domElement;
-      if (this.root) {
+      var canvas, box, i$, to$, i, program;
+      if (this.root.nodeName.toLowerCase() === 'canvas') {
+        this.canvas = this.root;
+      } else {
+        this.canvas = canvas = document.createElement('canvas');
         this.root.appendChild(canvas);
         box = this.root.getBoundingClientRect();
         (this.width = box.width, this.height = box.height, this).inited = true;
       }
       this.inited = true;
-      this.gl = gl = canvas.getContext('webgl');
-      canvas.width = this.width * this.scale;
-      canvas.height = this.height * this.scale;
-      canvas.style.width = this.width + "px";
-      canvas.style.height = this.height + "px";
-      gl.viewport(0, 0, gl.drawingBufferWidth * this.scale, gl.drawingBufferHeight * this.scale);
+      this.gl = this.canvas.getContext('webgl');
       this.programs = [];
       for (i$ = 0, to$ = this.shader.length; i$ < to$; ++i$) {
         i = i$;
@@ -241,7 +253,9 @@
     },
     destroy: function(){
       this.stop();
-      return this.root.removeChild(this.domElement);
+      if (this.root !== this.canvas) {
+        return this.root.removeChild(this.canvas);
+      }
     },
     stop: function(){
       return this.animate.running = false;
@@ -308,19 +322,14 @@
       }
       return results$;
     },
-    setSize: function(w, h){
-      var ref$;
-      this.width = w;
-      this.height = h;
-      ref$ = this.domElement;
-      ref$.width = w * this.scale;
-      ref$.height = h * this.scale;
-      this.domElement.style.width = w + "px";
-      this.domElement.style.height = h + "px";
-      return this.resize();
-    },
     resize: function(){
-      var i$, to$, i, pobj, uResolution, results$ = [];
+      var ref$, i$, to$, i, pobj, uResolution, results$ = [];
+      ref$ = this.canvas;
+      ref$.width = this.width * this.scale;
+      ref$.height = this.height * this.scale;
+      this.canvas.style.width = this.width + "px";
+      this.canvas.style.height = this.height + "px";
+      this.gl.viewport(0, 0, this.gl.drawingBufferWidth * this.scale, this.gl.drawingBufferHeight * this.scale);
       for (i$ = 0, to$ = this.programs.length; i$ < to$; ++i$) {
         i = i$;
         pobj = this.programs[i].obj;

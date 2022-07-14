@@ -1,5 +1,13 @@
 # Change Logs
 
+## v0.0.5
+
+ - support `config()` api
+ - support `root` as `canvas`
+ - unify resize code
+ - rename `domElement` to `canvas` for better semantics
+
+
 ## v0.0.4
 
  - fix bug: `main` field in `package.json` use incorrect file name

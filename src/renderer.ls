@@ -22,24 +22,30 @@ renderer = (shader, options = {}) ->
   root = @root
   if root => @root = if typeof(root) == \string => document.querySelector root else root
   @shader = if Array.isArray shader => shader else [shader]
-  @domElement = canvas = document.createElement \canvas
   @gl = gl = null
   @inputs = {}
   @
 
 renderer.prototype = Object.create(Object.prototype) <<< do
+  config: (o) ->
+    @ <<< o{width, height}
+    <[width height scale]>.map (n) ~> if o[n]? => @[n] = o[n]
+    @resize!
+
+  setSize: (w, h) ->
+    @ <<< width: w, height: h
+    @resize!
+
   init: ->
-    canvas = @domElement
-    if @root =>
+    if @root.nodeName.toLowerCase! == \canvas =>
+      @canvas = @root
+    else
+      @canvas = canvas = document.createElement \canvas
       @root.appendChild canvas
       box = @root.getBoundingClientRect!
       @ <<< box{width, height} <<< {inited: true}
     @inited = true
-    @gl = gl = canvas.getContext \webgl
-    canvas <<< width: @width * @scale, height: @height * @scale
-    canvas.style.width = "#{@width}px"
-    canvas.style.height = "#{@height}px"
-    gl.viewport 0, 0, gl.drawingBufferWidth * @scale, gl.drawingBufferHeight * @scale
+    @gl = @canvas.getContext \webgl
 
     @programs = []
     for i from 0 til @shader.length =>
@@ -175,7 +181,7 @@ renderer.prototype = Object.create(Object.prototype) <<< do
 
   destroy: ->
     @stop!
-    @root.removeChild @domElement
+    if @root != @canvas => @root.removeChild @canvas
 
   stop: -> @animate.running = false
   animate: (cb, options) ->
@@ -211,14 +217,11 @@ renderer.prototype = Object.create(Object.prototype) <<< do
         gl.clear gl.COLOR_BUFFER_BIT
         gl.drawArrays gl.TRIANGLES, 0, 6
 
-  setSize: (w, h) ->
-    @ <<< width: w, height: h
-    @domElement <<< width: w * @scale, height: h * @scale
-    @domElement.style.width = "#{w}px"
-    @domElement.style.height = "#{h}px"
-    @resize!
-
   resize: ->
+    @canvas <<< width: @width * @scale, height: @height * @scale
+    @canvas.style.width = "#{@width}px"
+    @canvas.style.height = "#{@height}px"
+    @gl.viewport 0, 0, @gl.drawingBufferWidth * @scale, @gl.drawingBufferHeight * @scale
     for i from 0 til @programs.length =>
       pobj = @programs[i].obj
       @gl.useProgram pobj
