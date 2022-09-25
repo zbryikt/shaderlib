@@ -1,5 +1,6 @@
 #pragma glslify: noise = require('./noise.glsl')
 #define NUM_OCTAVES 5
+// F.B.M: Fractal Brownian Motion
 
 float fbm(float x) {
   float v = 0.0;
