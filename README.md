@@ -33,6 +33,14 @@ Following is a sample shader code object:
       fragmentShader: "void main() {}"
     }
 
+### Shader Parameters
+
+ - fragment / vertex shader:
+   - `uTime` / uniform1f: `t` second elapsed since program start
+   - `position` / uniform2fv: `[width, height]`
+ - vertex shader only:
+ - `uResolution` / attribute / vec3
+
 
 ## Glslify
 

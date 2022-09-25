@@ -1,5 +1,11 @@
 # Change Logs
 
+## v0.0.6 (upcoming)
+
+ - update documentation
+ - fix bug: cloud.glsl syntax error issue
+
+
 ## v0.0.5
 
  - support `config()` api
