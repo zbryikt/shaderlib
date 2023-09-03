@@ -1,7 +1,8 @@
 # Change Logs
 
-## v0.0.6 (upcoming)
+## v0.0.6
 
+ - update dependencies
  - update documentation
  - fix bug: cloud.glsl syntax error issue
  - use a hidden canvas for manipuate result of rendering
