@@ -45,7 +45,9 @@ renderer.prototype = Object.create(Object.prototype) <<< do
       box = @root.getBoundingClientRect!
       @ <<< box{width, height} <<< {inited: true}
     @inited = true
-    @gl = @canvas.getContext \webgl
+    # use `_canvas` to render internally, then we can flip the result into `canvas`.
+    @_canvas = document.createElement \canvas
+    @gl = @_canvas.getContext \webgl
 
     @programs = []
     for i from 0 til @shader.length =>
@@ -102,25 +104,22 @@ renderer.prototype = Object.create(Object.prototype) <<< do
   build-pipeline: ->
     [gl, ps, pp] = [@gl, @programs, @pipeline]
     if pp =>
-      for link from 0 til pp.link =>
-        link.0
+      # TODO what is this?
+      for link from 0 til pp.link => link.0
       for i from 0 til ps.length =>
         if !(i in pp.src) => ps[i].data.uIn
-
     else
       for i from 0 til ps.length - 1 =>
         ps[i].data.fbo = gl.createFramebuffer!
         ps[i].data.db = gl.createRenderbuffer!
       for i from 1 til ps.length =>
-        ps[i].data.uIn1 = @texture ps[i], \uIn1, null
+        gl.useProgram ps[i].obj
+        ps[i].data["uIn#i"] = @texture ps[i], "uIn#i", null
         gl.bindFramebuffer gl.FRAMEBUFFER, ps[i - 1].data.fbo
-        gl.framebufferTexture2D gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, ps[i].data.uIn1, 0
+        gl.framebufferTexture2D gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, ps[i].data["uIn#i"], 0
         gl.bindRenderbuffer gl.RENDERBUFFER, ps[i - 1].data.db
         gl.renderbufferStorage gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, @width, @height
         gl.framebufferRenderbuffer gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, ps[i - 1].data.db
-
-
-
 
   make-program: (shader, pprogram) ->
     gl = @gl
@@ -217,10 +216,17 @@ renderer.prototype = Object.create(Object.prototype) <<< do
         gl.clear gl.COLOR_BUFFER_BIT
         gl.drawArrays gl.TRIANGLES, 0, 6
 
+    [flipx, flipy] = [true, true]
+    ctx = @canvas.getContext \2d
+    [sx,sy] = [(if flipx => -1 else 1), (if flipy => -1 else 1)]
+    ctx.scale sx, sy
+    ctx.drawImage @_canvas, 0, 0, sx * @width, sy * @height
+
   resize: ->
     @canvas <<< width: @width * @scale, height: @height * @scale
-    @canvas.style.width = "#{@width}px"
-    @canvas.style.height = "#{@height}px"
+    @_canvas <<< width: @width * @scale, height: @height * @scale
+    @canvas.style <<< width: "#{@width}px", height: "#{@height}px"
+    @_canvas.style <<< width: "#{@width}px", height: "#{@height}px"
     @gl.viewport 0, 0, @gl.drawingBufferWidth * @scale, @gl.drawingBufferHeight * @scale
     for i from 0 til @programs.length =>
       pobj = @programs[i].obj

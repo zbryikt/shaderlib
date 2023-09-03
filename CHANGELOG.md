@@ -4,6 +4,8 @@
 
  - update documentation
  - fix bug: cloud.glsl syntax error issue
+ - use a hidden canvas for manipuate result of rendering
+ - correctly support texture across multiple shaders
 
 
 ## v0.0.5

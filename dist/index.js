@@ -45,7 +45,8 @@
         (this.width = box.width, this.height = box.height, this).inited = true;
       }
       this.inited = true;
-      this.gl = this.canvas.getContext('webgl');
+      this._canvas = document.createElement('canvas');
+      this.gl = this._canvas.getContext('webgl');
       this.programs = [];
       for (i$ = 0, to$ = this.shader.length; i$ < to$; ++i$) {
         i = i$;
@@ -145,9 +146,10 @@
         }
         for (i$ = 1, to$ = ps.length; i$ < to$; ++i$) {
           i = i$;
-          ps[i].data.uIn1 = this.texture(ps[i], 'uIn1', null);
+          gl.useProgram(ps[i].obj);
+          ps[i].data["uIn" + i] = this.texture(ps[i], "uIn" + i, null);
           gl.bindFramebuffer(gl.FRAMEBUFFER, ps[i - 1].data.fbo);
-          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, ps[i].data.uIn1, 0);
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, ps[i].data["uIn" + i], 0);
           gl.bindRenderbuffer(gl.RENDERBUFFER, ps[i - 1].data.db);
           gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
           results1$.push(gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, ps[i - 1].data.db));
@@ -278,7 +280,7 @@
       return _(0);
     },
     render: function(t, options){
-      var gl, i$, to$, i, ref$, pdata, pobj, shader, uTime, k, v, u, that, results$ = [];
+      var gl, i$, to$, i, ref$, pdata, pobj, shader, uTime, k, v, u, that, flipx, flipy, ctx, sx, sy;
       t == null && (t = 0);
       options == null && (options = {});
       if (!this.inited) {
@@ -313,22 +315,33 @@
         gl.bindFramebuffer(gl.FRAMEBUFFER, pdata.fbo);
         gl.viewport(0, 0, this.width * this.scale, this.height * this.scale);
         if (that = shader.render) {
-          results$.push(that(this, this.programs[i], t));
+          that(this, this.programs[i], t);
         } else {
           gl.clearColor(1, 0, 0, 1);
           gl.clear(gl.COLOR_BUFFER_BIT);
-          results$.push(gl.drawArrays(gl.TRIANGLES, 0, 6));
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
       }
-      return results$;
+      ref$ = [true, true], flipx = ref$[0], flipy = ref$[1];
+      ctx = this.canvas.getContext('2d');
+      ref$ = [flipx ? -1 : 1, flipy ? -1 : 1], sx = ref$[0], sy = ref$[1];
+      ctx.scale(sx, sy);
+      return ctx.drawImage(this._canvas, 0, 0, sx * this.width, sy * this.height);
     },
     resize: function(){
       var ref$, i$, to$, i, pobj, uResolution, results$ = [];
       ref$ = this.canvas;
       ref$.width = this.width * this.scale;
       ref$.height = this.height * this.scale;
-      this.canvas.style.width = this.width + "px";
-      this.canvas.style.height = this.height + "px";
+      ref$ = this._canvas;
+      ref$.width = this.width * this.scale;
+      ref$.height = this.height * this.scale;
+      ref$ = this.canvas.style;
+      ref$.width = this.width + "px";
+      ref$.height = this.height + "px";
+      ref$ = this._canvas.style;
+      ref$.width = this.width + "px";
+      ref$.height = this.height + "px";
       this.gl.viewport(0, 0, this.gl.drawingBufferWidth * this.scale, this.gl.drawingBufferHeight * this.scale);
       for (i$ = 0, to$ = this.programs.length; i$ < to$; ++i$) {
         i = i$;
