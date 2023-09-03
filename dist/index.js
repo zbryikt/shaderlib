@@ -20,9 +20,7 @@
   renderer.prototype = import$(Object.create(Object.prototype), {
     config: function(o){
       var this$ = this;
-      this.width = o.width;
-      this.height = o.height;
-      ['width', 'height', 'scale'].map(function(n){
+      ['width', 'height', 'scale', 'flip'].map(function(n){
         if (o[n] != null) {
           return this$[n] = o[n];
         }
@@ -280,7 +278,7 @@
       return _(0);
     },
     render: function(t, options){
-      var gl, i$, to$, i, ref$, pdata, pobj, shader, uTime, k, v, u, that, flipx, flipy, ctx, sx, sy;
+      var gl, i$, to$, i, ref$, pdata, pobj, shader, uTime, k, v, u, that, ctx, sx, sy;
       t == null && (t = 0);
       options == null && (options = {});
       if (!this.inited) {
@@ -322,14 +320,13 @@
           gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
       }
-      ref$ = [false, false], flipx = ref$[0], flipy = ref$[1];
       ctx = this.canvas.getContext('2d');
-      ref$ = [flipx ? -1 : 1, flipy ? -1 : 1], sx = ref$[0], sy = ref$[1];
+      ref$ = [this.flipx ? -1 : 1, this.flipy ? -1 : 1], sx = ref$[0], sy = ref$[1];
       ctx.scale(sx, sy);
       return ctx.drawImage(this._canvas, 0, 0, sx * this.width, sy * this.height);
     },
     resize: function(){
-      var ref$, i$, to$, i, pobj, uResolution, results$ = [];
+      var ref$, i$, to$, i, pobj, uResolution;
       ref$ = this.canvas;
       ref$.width = this.width * this.scale;
       ref$.height = this.height * this.scale;
@@ -348,9 +345,10 @@
         pobj = this.programs[i].obj;
         this.gl.useProgram(pobj);
         uResolution = this.gl.getUniformLocation(pobj, "uResolution");
-        results$.push(this.gl.uniform2fv(uResolution, [this.width * this.scale, this.height * this.scale]));
+        this.gl.uniform2fv(uResolution, [this.width * this.scale, this.height * this.scale]);
       }
-      return results$;
+      this.flipx = (ref$ = this.flip) === 'horizontal' || ref$ === 'diagonal';
+      return this.flipy = (ref$ = this.flip) === 'vertical' || ref$ === 'diagonal';
     }
   });
   if (typeof module != 'undefined' && module !== null) {

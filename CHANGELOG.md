@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.7
+
+ - support `flip` option (either `none`, `horizontal`, `vertical` or `diagonal`)
+
+
 ## v0.0.6
 
  - update dependencies

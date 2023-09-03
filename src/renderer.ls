@@ -14,10 +14,10 @@ default-fragment-shader = """
 """
 
 # pass root as null to create renderer without attaching canvas element to dom
-# width / height: only used when there's not root
+# width / height: only used when there's no root
 # shader: array of shader. output of each shader will be the uIn1 texture for next shader.
 renderer = (shader, options = {}) ->
-  # options: root, width, height, pipeline, debug, scale
+  # options: root, width, height, pipeline, debug, scale, flip
   @ <<< {width: 320, height: 240, scale: 1} <<< options
   root = @root
   if root => @root = if typeof(root) == \string => document.querySelector root else root
@@ -28,8 +28,7 @@ renderer = (shader, options = {}) ->
 
 renderer.prototype = Object.create(Object.prototype) <<< do
   config: (o) ->
-    @ <<< o{width, height}
-    <[width height scale]>.map (n) ~> if o[n]? => @[n] = o[n]
+    <[width height scale flip]>.map (n) ~> if o[n]? => @[n] = o[n]
     @resize!
 
   setSize: (w, h) ->
@@ -216,9 +215,8 @@ renderer.prototype = Object.create(Object.prototype) <<< do
         gl.clear gl.COLOR_BUFFER_BIT
         gl.drawArrays gl.TRIANGLES, 0, 6
 
-    [flipx, flipy] = [false, false]
     ctx = @canvas.getContext \2d
-    [sx,sy] = [(if flipx => -1 else 1), (if flipy => -1 else 1)]
+    [sx,sy] = [(if @flipx => -1 else 1), (if @flipy => -1 else 1)]
     ctx.scale sx, sy
     ctx.drawImage @_canvas, 0, 0, sx * @width, sy * @height
 
@@ -233,6 +231,8 @@ renderer.prototype = Object.create(Object.prototype) <<< do
       @gl.useProgram pobj
       uResolution = @gl.getUniformLocation pobj, "uResolution"
       @gl.uniform2fv(uResolution, [@width * @scale, @height * @scale])
+    @flipx = @flip in <[horizontal diagonal]>
+    @flipy = @flip in <[vertical diagonal]>
 
 if module? => module.exports = {renderer}
 else if window? => window.shaderlib = {renderer}
