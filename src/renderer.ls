@@ -216,7 +216,7 @@ renderer.prototype = Object.create(Object.prototype) <<< do
         gl.clear gl.COLOR_BUFFER_BIT
         gl.drawArrays gl.TRIANGLES, 0, 6
 
-    [flipx, flipy] = [true, true]
+    [flipx, flipy] = [false, false]
     ctx = @canvas.getContext \2d
     [sx,sy] = [(if flipx => -1 else 1), (if flipy => -1 else 1)]
     ctx.scale sx, sy

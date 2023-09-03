@@ -322,7 +322,7 @@
           gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
       }
-      ref$ = [true, true], flipx = ref$[0], flipy = ref$[1];
+      ref$ = [false, false], flipx = ref$[0], flipy = ref$[1];
       ctx = this.canvas.getContext('2d');
       ref$ = [flipx ? -1 : 1, flipy ? -1 : 1], sx = ref$[0], sy = ref$[1];
       ctx.scale(sx, sy);
