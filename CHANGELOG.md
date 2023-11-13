@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.8
+
+ - to prevent flickering, call `resize` in `config` only if any config is changed.
+
+
 ## v0.0.7
 
  - support `flip` option (either `none`, `horizontal`, `vertical` or `diagonal`)

@@ -28,8 +28,11 @@ renderer = (shader, options = {}) ->
 
 renderer.prototype = Object.create(Object.prototype) <<< do
   config: (o) ->
-    <[width height scale flip]>.map (n) ~> if o[n]? => @[n] = o[n]
-    @resize!
+    v = <[width height scale flip]>
+      .filter (n) ~> o[n]? and @[n] != o[n]
+      .map (n) ~> if o[n]? => @[n] = o[n]
+      .length
+    if v => @resize!
 
   setSize: (w, h) ->
     @ <<< width: w, height: h

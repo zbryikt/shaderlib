@@ -19,13 +19,17 @@
   };
   renderer.prototype = import$(Object.create(Object.prototype), {
     config: function(o){
-      var this$ = this;
-      ['width', 'height', 'scale', 'flip'].map(function(n){
+      var v, this$ = this;
+      v = ['width', 'height', 'scale', 'flip'].filter(function(n){
+        return o[n] != null && this$[n] !== o[n];
+      }).map(function(n){
         if (o[n] != null) {
           return this$[n] = o[n];
         }
-      });
-      return this.resize();
+      }).length;
+      if (v) {
+        return this.resize();
+      }
     },
     setSize: function(w, h){
       this.width = w;
