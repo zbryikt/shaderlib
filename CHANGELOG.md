@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.9
+
+ - support WebGL 2 ( OpenGL ES 3.0 )
+
+
 ## v0.0.8
 
  - to prevent flickering, call `resize` in `config` only if any config is changed.

@@ -11,7 +11,7 @@ shaderlib is a toolkit for frontend WebGL rendering. It includes:
 For rendering, include `dist/index.js` and:
 
     var renderer = new shaderlib.renderer(
-      [shader-code-obj], {root: 'node or selector for container'}
+      <shader-code-obj>, {root: <some-node>, version: 1}
     );
     renderer.init();
     renderer.animate();
@@ -22,6 +22,11 @@ where `shader-code-obj` is an object with following fields:
  - `uniforms`: object containing definitions of global variables (per primitive, from WebGL to shader).
  - `fragmentShader`: string for fragment shader code
  - `vertexShader`: string for vertex shader code
+
+and the configuration object with following fields:
+
+ - `root`: node or selector for container
+ - `version`: used WebGL version. default 1. set it to 2 for WebGL 2 rendering context.
 
 Following is a sample shader code object:
 

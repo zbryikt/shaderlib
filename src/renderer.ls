@@ -1,17 +1,35 @@
-default-vertex-shader = """
-  precision highp float;
-  attribute vec3 position;
-  void main() {
-    gl_Position = vec4(position, 1.);
-  }
-"""
-
-default-fragment-shader = """
-  precision highp float;
-  void main() {
-    gl_FragColor = vec4(0., 0., 0., 1.);
-  }
-"""
+defshader =
+  vertex:
+    v1: '''
+    precision highp float;
+    attribute vec3 position;
+    void main() {
+      gl_Position = vec4(position, 1.);
+    }
+    '''
+    v2: '''
+    #version 300 es
+    precision highp float;
+    in vec3 position;
+    void main() {
+      gl_Position = vec4(position, 1.);
+    }
+    '''
+  fragment:
+    v1: '''
+    precision highp float;
+    void main() {
+      gl_FragColor = vec4(0., 0., 0., 1.);
+    }
+    '''
+    v2: '''
+    #version 300 es
+    precision highp float;
+    out vec4 outColor;
+    void main() {
+      outColor = vec4(0., 0., 0., 1.);
+    }
+    '''
 
 # pass root as null to create renderer without attaching canvas element to dom
 # width / height: only used when there's no root
@@ -49,7 +67,7 @@ renderer.prototype = Object.create(Object.prototype) <<< do
     @inited = true
     # use `_canvas` to render internally, then we can flip the result into `canvas`.
     @_canvas = document.createElement \canvas
-    @gl = @_canvas.getContext \webgl
+    @gl = @_canvas.getContext if @version == 2 => \webgl2 else \webgl
 
     @programs = []
     for i from 0 til @shader.length =>
@@ -127,8 +145,9 @@ renderer.prototype = Object.create(Object.prototype) <<< do
     gl = @gl
     [pdata, pobj] = [{texture-map: {}}, gl.createProgram!]
     program = {data: pdata, obj: pobj}
-    vs = @make-shader (shader.vertexShader or default-vertex-shader), gl.VERTEX_SHADER
-    fs = @make-shader (shader.fragmentShader or default-fragment-shader), gl.FRAGMENT_SHADER
+    ver = if @version == 2 => \v2 else \v1
+    vs = @make-shader (shader.vertexShader or defshader.vertex[ver]), gl.VERTEX_SHADER
+    fs = @make-shader (shader.fragmentShader or defshader.fragment[ver]), gl.FRAGMENT_SHADER
     gl.attachShader pobj, vs
     gl.attachShader pobj, fs
     gl.linkProgram pobj

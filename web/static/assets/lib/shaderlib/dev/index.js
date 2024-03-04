@@ -1,7 +1,15 @@
 (function(){
-  var defaultVertexShader, defaultFragmentShader, renderer;
-  defaultVertexShader = "precision highp float;\nattribute vec3 position;\nvoid main() {\n  gl_Position = vec4(position, 1.);\n}";
-  defaultFragmentShader = "precision highp float;\nvoid main() {\n  gl_FragColor = vec4(0., 0., 0., 1.);\n}";
+  var defshader, renderer;
+  defshader = {
+    vertex: {
+      v1: 'precision highp float;\nattribute vec3 position;\nvoid main() {\n  gl_Position = vec4(position, 1.);\n}',
+      v2: '#version 300 es\nprecision highp float;\nin vec3 position;\nvoid main() {\n  gl_Position = vec4(position, 1.);\n}'
+    },
+    fragment: {
+      v1: 'precision highp float;\nvoid main() {\n  gl_FragColor = vec4(0., 0., 0., 1.);\n}',
+      v2: '#version 300 es\nprecision highp float;\nout vec4 outColor;\nvoid main() {\n  outColor = vec4(0., 0., 0., 1.);\n}'
+    }
+  };
   renderer = function(shader, options){
     var root, gl;
     options == null && (options = {});
@@ -48,7 +56,10 @@
       }
       this.inited = true;
       this._canvas = document.createElement('canvas');
-      this.gl = this._canvas.getContext('webgl');
+      if (this.version === 2) {
+        console.log("[shaderlib] use WebGL version 2 implementation");
+      }
+      this.gl = this._canvas.getContext(this.version === 2 ? 'webgl2' : 'webgl');
       this.programs = [];
       for (i$ = 0, to$ = this.shader.length; i$ < to$; ++i$) {
         i = i$;
@@ -160,7 +171,7 @@
       }
     },
     makeProgram: function(shader, pprogram){
-      var gl, ref$, pdata, pobj, program, vs, fs, positionLocation;
+      var gl, ref$, pdata, pobj, program, ver, vs, fs, positionLocation;
       gl = this.gl;
       ref$ = [
         {
@@ -171,8 +182,9 @@
         data: pdata,
         obj: pobj
       };
-      vs = this.makeShader(shader.vertexShader || defaultVertexShader, gl.VERTEX_SHADER);
-      fs = this.makeShader(shader.fragmentShader || defaultFragmentShader, gl.FRAGMENT_SHADER);
+      ver = this.version === 2 ? 'v2' : 'v1';
+      vs = this.makeShader(shader.vertexShader || defshader.vertex[ver], gl.VERTEX_SHADER);
+      fs = this.makeShader(shader.fragmentShader || defshader.fragment[ver], gl.FRAGMENT_SHADER);
       gl.attachShader(pobj, vs);
       gl.attachShader(pobj, fs);
       gl.linkProgram(pobj);
