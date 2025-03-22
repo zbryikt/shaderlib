@@ -144,7 +144,7 @@ renderer.prototype = Object.create(Object.prototype) <<< do
   make-program: (shader, pprogram) ->
     gl = @gl
     [pdata, pobj] = [{texture-map: {}}, gl.createProgram!]
-    program = {data: pdata, obj: pobj}
+    program = {data: pdata, obj: pobj, lastimg: null}
     ver = if @version == 2 => \v2 else \v1
     vs = @make-shader (shader.vertexShader or defshader.vertex[ver]), gl.VERTEX_SHADER
     fs = @make-shader (shader.fragmentShader or defshader.fragment[ver]), gl.FRAGMENT_SHADER
@@ -225,9 +225,10 @@ renderer.prototype = Object.create(Object.prototype) <<< do
         if v.type == \t =>
           if v.value =>
             # cache policy: by object (new object means to update texture)
-            doapply = if !v.cache => true
-            else if v.cache == \object =>
-              if !v.value.applied => v.value.applied = true else false
+            doapply = true
+            if v.cache == \object =>
+              if @programs[i].lastimg == v.value => doapply = false
+              else @programs[i].lastimg = v.value
             if doapply => @texture @programs[i], k, v.value
         else
           u = gl.getUniformLocation pobj, k

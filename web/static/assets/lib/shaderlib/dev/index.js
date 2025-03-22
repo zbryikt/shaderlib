@@ -177,7 +177,8 @@
       ], pdata = ref$[0], pobj = ref$[1];
       program = {
         data: pdata,
-        obj: pobj
+        obj: pobj,
+        lastimg: null
       };
       ver = this.version === 2 ? 'v2' : 'v1';
       vs = this.makeShader(shader.vertexShader || defshader.vertex[ver], gl.VERTEX_SHADER);
@@ -308,9 +309,14 @@
           v = ref$[k];
           if (v.type === 't') {
             if (v.value) {
-              doapply = !v.cache
-                ? true
-                : v.cache === 'object' ? !v.value.applied ? v.value.applied = true : false : void 8;
+              doapply = true;
+              if (v.cache === 'object') {
+                if (this.programs[i].lastimg === v.value) {
+                  doapply = false;
+                } else {
+                  this.programs[i].lastimg = v.value;
+                }
+              }
               if (doapply) {
                 this.texture(this.programs[i], k, v.value);
               }

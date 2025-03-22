@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.11
+
+ - update type "t" config texture cache mechanism by matching object instance.
+
+
 ## v0.0.10
 
  - for type "t" config, support object-based cache policy to prevent texture update for every render call. 

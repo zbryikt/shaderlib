@@ -39,6 +39,9 @@ Following is a sample shader code object:
       fragmentShader: "void main() {}"
     }
 
+For `t` type uniforms, set `cache` to `object` to prevent recreating texture if the given value is the same object.
+
+
 ### Shader Parameters
 
  - fragment / vertex shader:
