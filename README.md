@@ -32,7 +32,8 @@ Following is a sample shader code object:
 
     {
       uniforms: {
-          c1: {type: "3fv", value: [0.76, 0.91, 0.81]}
+          c1: {type: "3fv", value: [0.76, 0.91, 0.81]},
+          img: {type: "t", value: new image(), cache: "object"}
       },
       vertexShader: "void main() {}"
       fragmentShader: "void main() {}"

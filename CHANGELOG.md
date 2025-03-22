@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.10
+
+ - for type "t" config, support object-based cache policy to prevent texture update for every render call. 
+
+
 ## v0.0.9
 
  - support WebGL 2 ( OpenGL ES 3.0 )

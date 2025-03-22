@@ -56,9 +56,6 @@
       }
       this.inited = true;
       this._canvas = document.createElement('canvas');
-      if (this.version === 2) {
-        console.log("[shaderlib] use WebGL version 2 implementation");
-      }
       this.gl = this._canvas.getContext(this.version === 2 ? 'webgl2' : 'webgl');
       this.programs = [];
       for (i$ = 0, to$ = this.shader.length; i$ < to$; ++i$) {
@@ -294,7 +291,7 @@
       return _(0);
     },
     render: function(t, options){
-      var gl, i$, to$, i, ref$, pdata, pobj, shader, uTime, k, v, u, that, ctx, sx, sy;
+      var gl, i$, to$, i, ref$, pdata, pobj, shader, uTime, k, v, doapply, u, that, ctx, sx, sy;
       t == null && (t = 0);
       options == null && (options = {});
       if (!this.inited) {
@@ -310,7 +307,14 @@
         for (k in ref$ = shader.uniforms || {}) {
           v = ref$[k];
           if (v.type === 't') {
-            this.texture(this.programs[i], k, v.value);
+            if (v.value) {
+              doapply = !v.cache
+                ? true
+                : v.cache === 'object' ? !v.value.applied ? v.value.applied = true : false : void 8;
+              if (doapply) {
+                this.texture(this.programs[i], k, v.value);
+              }
+            }
           } else {
             u = gl.getUniformLocation(pobj, k);
             if (/^Matrix/.exec(v.type)) {

@@ -222,7 +222,13 @@ renderer.prototype = Object.create(Object.prototype) <<< do
       uTime = gl.getUniformLocation pobj, "uTime"
       gl.uniform1f(uTime, t)
       for k,v of (shader.uniforms or {}) =>
-        if v.type == \t => @texture @programs[i], k, v.value
+        if v.type == \t =>
+          if v.value =>
+            # cache policy: by object (new object means to update texture)
+            doapply = if !v.cache => true
+            else if v.cache == \object =>
+              if !v.value.applied => v.value.applied = true else false
+            if doapply => @texture @programs[i], k, v.value
         else
           u = gl.getUniformLocation pobj, k
           if /^Matrix/.exec(v.type) => gl["uniform#{v.type}"](u, false, v.value)
