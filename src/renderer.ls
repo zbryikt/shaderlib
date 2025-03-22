@@ -53,8 +53,9 @@ renderer.prototype = Object.create(Object.prototype) <<< do
     if v => @resize!
 
   setSize: (w, h) ->
+    v = @width != w or @height != h
     @ <<< width: w, height: h
-    @resize!
+    if v => @resize!
 
   init: ->
     if @root.nodeName.toLowerCase! == \canvas =>
@@ -73,7 +74,6 @@ renderer.prototype = Object.create(Object.prototype) <<< do
     for i from 0 til @shader.length =>
       program = @make-program @shader[i], @programs[i - 1]
       @programs.push program
-    @build-pipeline!
     @resize!
 
   sizeof: (type)->
@@ -262,6 +262,7 @@ renderer.prototype = Object.create(Object.prototype) <<< do
       @gl.uniform2fv(uResolution, [@width * @scale, @height * @scale])
     @flipx = @flip in <[horizontal diagonal]>
     @flipy = @flip in <[vertical diagonal]>
+    @build-pipeline!
 
 if module? => module.exports = {renderer}
 else if window? => window.shaderlib = {renderer}

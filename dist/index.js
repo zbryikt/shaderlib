@@ -40,9 +40,13 @@
       }
     },
     setSize: function(w, h){
+      var v;
+      v = this.width !== w || this.height !== h;
       this.width = w;
       this.height = h;
-      return this.resize();
+      if (v) {
+        return this.resize();
+      }
     },
     init: function(){
       var canvas, box, i$, to$, i, program;
@@ -63,7 +67,6 @@
         program = this.makeProgram(this.shader[i], this.programs[i - 1]);
         this.programs.push(program);
       }
-      this.buildPipeline();
       return this.resize();
     },
     sizeof: function(type){
@@ -374,7 +377,8 @@
         this.gl.uniform2fv(uResolution, [this.width * this.scale, this.height * this.scale]);
       }
       this.flipx = (ref$ = this.flip) === 'horizontal' || ref$ === 'diagonal';
-      return this.flipy = (ref$ = this.flip) === 'vertical' || ref$ === 'diagonal';
+      this.flipy = (ref$ = this.flip) === 'vertical' || ref$ === 'diagonal';
+      return this.buildPipeline();
     }
   });
   if (typeof module != 'undefined' && module !== null) {

@@ -2,7 +2,7 @@
   "author": "zbryikt",
   "name": "shaderlib",
   "description": "Shaderlib",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "homepage": "https://github.com/zbryikt/shaderlib",
   "files": [ "lib/**/*", "dist/**/*" ],
   "browser": "./dist/index.min.js",

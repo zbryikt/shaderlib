@@ -1,5 +1,10 @@
 # Change Logs
 
+## v0.0.12
+
+ - rebuild pipeline once width or height changes for updating texture size
+
+
 ## v0.0.11
 
  - update type "t" config texture cache mechanism by matching object instance.
